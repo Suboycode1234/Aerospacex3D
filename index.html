@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Air Superiority 3D - Flight Combat Simulator</title>
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@500;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="game-container">
+    <!-- 3D WebGL Canvas -->
+    <canvas id="three-canvas"></canvas>
+
+    <!-- Cockpit / Combat HUD Canvas -->
+    <canvas id="hud-canvas"></canvas>
+
+    <!-- G-Force Blackout/Redout Vignette Overlay -->
+    <div id="gforce-overlay"></div>
+
+    <!-- Hyperspace Warp Jump Flash Overlay -->
+    <div id="warp-overlay"></div>
+
+    <!-- Main Menu & Aircraft Selection Screen -->
+    <div id="menu-screen" class="menu-overlay">
+      <div class="menu-content">
+        <header class="menu-header">
+          <div class="menu-badge">DEFENSE SECTOR 7 // COMBAT AIR PATROL</div>
+          <h1 class="menu-title">AIR SUPERIORITY 3D</h1>
+          <p class="menu-subtitle">SELECT YOUR COMBAT JET &bull; ENGAGE HOSTILES WITHIN ISLAND PERIMETER</p>
+        </header>
+
+        <!-- Aircraft Selection Grid -->
+        <div class="aircraft-grid">
+          <!-- Card 1: F-16 Fighting Falcon -->
+          <div class="plane-card active" data-plane="f16" id="card-f16">
+            <div class="card-ribbon">POPULAR</div>
+            <div class="card-header">
+              <span class="plane-designation">F-16C</span>
+              <span class="plane-name">FIGHTING FALCON</span>
+            </div>
+            <div class="plane-role">SUPERSONIC MULTIROLE FIGHTER</div>
+            <div class="plane-stats">
+              <div class="stat-row">
+                <span>SPEED</span>
+                <div class="stat-bar"><div style="width: 86%;"></div></div>
+                <span class="stat-val">MACH 2.05</span>
+              </div>
+              <div class="stat-row">
+                <span>AGILITY</span>
+                <div class="stat-bar"><div style="width: 95%;"></div></div>
+                <span class="stat-val">9G FBW CARVE</span>
+              </div>
+              <div class="stat-row">
+                <span>WEAPONS</span>
+                <div class="stat-bar"><div style="width: 85%;"></div></div>
+                <span class="stat-val">20MM + 6x AIM-9</span>
+              </div>
+              <div class="stat-row">
+                <span>ENGINE</span>
+                <span class="stat-val text-right">P&amp;W F100 SINGLE NOZZLE</span>
+              </div>
+            </div>
+            <div class="card-badge-status">READY FOR FLIGHT</div>
+          </div>
+
+          <!-- Card 2: Eurofighter Typhoon -->
+          <div class="plane-card" data-plane="typhoon" id="card-typhoon">
+            <div class="card-ribbon">AIR DOMINANCE</div>
+            <div class="card-header">
+              <span class="plane-designation">EF-2000</span>
+              <span class="plane-name">EUROFIGHTER TYPHOON</span>
+            </div>
+            <div class="plane-role">DELTA-WING CANARD INTERCEPTOR</div>
+            <div class="plane-stats">
+              <div class="stat-row">
+                <span>SPEED</span>
+                <div class="stat-bar"><div style="width: 92%;"></div></div>
+                <span class="stat-val">MACH 2.25</span>
+              </div>
+              <div class="stat-row">
+                <span>AGILITY</span>
+                <div class="stat-bar"><div style="width: 98%;"></div></div>
+                <span class="stat-val">CANARD SUPER-AGILE</span>
+              </div>
+              <div class="stat-row">
+                <span>WEAPONS</span>
+                <div class="stat-bar"><div style="width: 90%;"></div></div>
+                <span class="stat-val">27MM + 6x AIM-9</span>
+              </div>
+              <div class="stat-row">
+                <span>ENGINE</span>
+                <span class="stat-val text-right">TWIN EJ200 DUAL NOZZLE</span>
+              </div>
+            </div>
+            <div class="card-badge-status">CLICK TO SELECT</div>
+          </div>
+
+          <!-- Card 3: Rapid Shadow -->
+          <div class="plane-card" data-plane="rapidshadow" id="card-rapidshadow">
+            <div class="card-ribbon">STEALTH</div>
+            <div class="card-header">
+              <span class="plane-designation">X-77</span>
+              <span class="plane-name">RAPID SHADOW</span>
+            </div>
+            <div class="plane-role">NEXT-GEN STEALTH AIR COMBAT</div>
+            <div class="plane-stats">
+              <div class="stat-row">
+                <span>SPEED</span>
+                <div class="stat-bar"><div style="width: 96%;"></div></div>
+                <span class="stat-val">MACH 2.40</span>
+              </div>
+              <div class="stat-row">
+                <span>AGILITY</span>
+                <div class="stat-bar"><div style="width: 90%;"></div></div>
+                <span class="stat-val">THRUST VECTORING</span>
+              </div>
+              <div class="stat-row">
+                <span>WEAPONS</span>
+                <div class="stat-bar"><div style="width: 88%;"></div></div>
+                <span class="stat-val">20MM + 6x AIM-9</span>
+              </div>
+              <div class="stat-row">
+                <span>ENGINE</span>
+                <span class="stat-val text-right">TWIN STEALTH DUAL NOZZLE</span>
+              </div>
+            </div>
+            <div class="card-badge-status">CLICK TO SELECT</div>
+          </div>
+        </div>
+
+        <!-- Tactical Briefing Box -->
+        <div class="menu-briefing">
+          <div class="briefing-box">
+            <span class="b-tag">ISLAND COMBAT PERIMETER</span>
+            <p>Containment barrier active at <b>3,800m radius</b>. Hostiles detected in island airspace only. Aircraft cannot exit the perimeter.</p>
+          </div>
+          <div class="briefing-box">
+            <span class="b-tag">AERODYNAMIC CARVING ACTIVE</span>
+            <p>Fly-by-wire coordinated turn carving enabled. Lateral drifting eliminated &bull; Wings &amp; rudder smoothly pull into flight path.</p>
+          </div>
+        </div>
+
+        <!-- Controls Overview -->
+        <div class="menu-controls-bar">
+          <span><b>W / S</b> PITCH</span>
+          <span><b>Q / E</b> ROLL</span>
+          <span><b>A / D</b> YAW &amp; BANK</span>
+          <span><b>SHIFT / CTRL</b> THROTTLE</span>
+          <span><b>SPACE</b> CANNON</span>
+          <span><b>F</b> MISSILE</span>
+          <span><b>C</b> FLARES</span>
+          <span><b>V</b> CAMERA</span>
+        </div>
+
+        <!-- Launch Button -->
+        <button id="launch-flight-btn" class="launch-btn">
+          <span class="launch-glow"></span>
+          <span class="launch-text">SCRAMBLE &amp; LAUNCH</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- UI Overlay Elements -->
+    <div id="ui-layer">
+      <!-- Top Status Bar -->
+      <div class="top-bar">
+        <div class="flight-tag">
+          <span class="status-dot"></span>
+          <span class="callsign">VIPER-1</span>
+          <span class="mission-status" id="mission-status">AIR PATROL // ENGAGE HOSTILES</span>
+        </div>
+        <div class="kill-counter">
+          <span class="label">HOSTILES DOWN:</span>
+          <span class="value" id="kills-value">0</span>
+          <span class="label" style="margin-left: 15px;">REMAINING:</span>
+          <span class="value" id="enemies-remaining">8</span>
+        </div>
+        <div class="time-badge" id="time-badge" title="Master Clock & Time-of-Day Dual-Lightmap Status">
+          <span>🕒</span>
+          <span id="time-clock">14:00</span>
+          <span class="time-phase" id="time-phase">NOON</span>
+          <span class="time-rt-tag">BAKED GI</span>
+        </div>
+        <div class="system-controls">
+          <div class="fps-badge" id="fps-badge"><span id="fps-value">60</span> FPS</div>
+          <button id="cam-btn" class="hud-btn" title="Cycle Camera [V]">CAM: CHASE [V]</button>
+          <button id="settings-btn" class="hud-btn" title="Settings / Controls [ESC]">CONTROLS [ESC]</button>
+          <button id="audio-btn" class="hud-btn" title="Toggle Sound [M]">AUDIO: ON [M]</button>
+        </div>
+      </div>
+
+      <!-- Tactical Radar Display (Bottom Right) -->
+      <div id="radar-container">
+        <div class="radar-header">
+          <span>TAC-RADAR 15NM</span>
+          <span id="radar-contacts">4 TGT</span>
+        </div>
+        <canvas id="radar-canvas" width="180" height="180"></canvas>
+      </div>
+
+      <!-- Weapon & Systems Panel (Bottom Left) -->
+      <div id="weapon-panel">
+        <div class="wpn-card active" id="wpn-gun">
+          <div class="wpn-name">20MM VULCAN</div>
+          <div class="wpn-bar"><div id="gun-ammo-bar" style="width: 100%;"></div></div>
+          <div class="wpn-qty"><span id="gun-ammo">750</span> RDS <span class="wpn-key">[SPACE]</span></div>
+        </div>
+        <div class="wpn-card active" id="wpn-msl">
+          <div class="wpn-name">AIM-9X SIDEWINDER</div>
+          <div class="wpn-bar"><div id="msl-ammo-bar" style="width: 100%;"></div></div>
+          <div class="wpn-qty"><span id="msl-ammo">∞</span> MSL <span class="wpn-key">[F]</span></div>
+        </div>
+        <div class="wpn-card" id="wpn-flr">
+          <div class="wpn-name">IR FLARES</div>
+          <div class="wpn-bar"><div id="flr-ammo-bar" style="width: 100%;"></div></div>
+          <div class="wpn-qty"><span id="flr-ammo">30</span> FLR <span class="wpn-key">[C]</span></div>
+        </div>
+        <div class="hull-card">
+          <div class="wpn-name">AIRCRAFT INTEGRITY</div>
+          <div class="wpn-bar"><div id="hull-bar" style="width: 100%; background: #00ffaa;"></div></div>
+          <div class="wpn-qty"><span id="hull-value">100</span>%</div>
+        </div>
+      </div>
+
+      <!-- Threat / Warning Banner -->
+      <div id="warning-banner" class="hidden">
+        <div class="warning-box" id="warning-box">
+          <span class="warning-icon">⚠</span>
+          <span id="warning-text">MISSILE INBOUND</span>
+        </div>
+      </div>
+
+      <!-- Quick Control Helper (Bottom Center) -->
+      <div id="control-helper">
+        <span><b>W</b> PITCH UP / <b>S</b> DOWN</span>
+        <span><b>Q/E</b> ROLL</span>
+        <span><b>A/D</b> YAW</span>
+        <span><b>SHIFT</b> BOOST / <b>CTRL</b> BRAKE</span>
+        <span><b>SPACE</b> GUN</span>
+        <span><b>F</b> MISSILE (∞)</span>
+        <span><b>C</b> FLARES</span>
+        <span><b>R</b> LOCK TGT</span>
+        <span><b>V</b> CAM</span>
+      </div>
+
+      <!-- Modal: Controls & Settings -->
+      <div id="settings-modal" class="modal hidden">
+        <div class="modal-card">
+          <h2>TACTICAL FLIGHT MANUAL & SETTINGS</h2>
+          <div class="modal-grid">
+            <div class="settings-col">
+              <h3>FLIGHT CONTROLS</h3>
+              <table class="keys-table">
+                <tr><td>Pitch Up / Down</td><td><kbd>W</kbd> / <kbd>S</kbd></td></tr>
+                <tr><td>Rudder Yaw Left / Right</td><td><kbd>A</kbd> / <kbd>D</kbd></td></tr>
+                <tr><td>Bank Roll Left / Right</td><td><kbd>Q</kbd> / <kbd>E</kbd></td></tr>
+                <tr><td>Throttle Up / Down</td><td><kbd>L-Shift</kbd> / <kbd>L-Ctrl</kbd></td></tr>
+                <tr><td>Full Afterburner</td><td><kbd>Shift</kbd> (Hold &gt; 90%)</td></tr>
+                <tr><td>Airbrake</td><td><kbd>B</kbd> or Throttle &lt; 15%</td></tr>
+                <tr><td>Mouse Flight Assist</td><td><kbd>Toggle Mouse Control</kbd></td></tr>
+                <tr><td>20mm Autocannon</td><td><kbd>Space</kbd></td></tr>
+                <tr><td>Fire Guided Missile</td><td><kbd>F</kbd></td></tr>
+                <tr><td>Deploy IR Flares</td><td><kbd>C</kbd></td></tr>
+                <tr><td>Cycle Target Lock</td><td><kbd>R</kbd></td></tr>
+                <tr><td>Change Camera View</td><td><kbd>V</kbd></td></tr>
+              </table>
+            </div>
+            <div class="settings-col">
+              <h3>3D ASSETS & TUNING</h3>
+              <div class="setting-item" style="background: rgba(0, 229, 255, 0.08); padding: 10px; border-radius: 6px; border: 1px solid rgba(0, 229, 255, 0.25);">
+                <label style="color: #00e5ff; font-weight: bold;">🌅 BAKED RAYTRACING & TIME OF DAY (ZERO GPU COST):</label>
+                <div class="slider-row" style="margin-top: 6px;">
+                  <input type="range" id="time-slider" min="0" max="24" step="0.1" value="14.0">
+                  <span id="time-slider-val" style="min-width: 90px; font-weight: bold; color: #00ffaa;">14:00 (NOON)</span>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 8px;">
+                  <button id="time-btn-dawn" class="hud-btn" style="padding: 4px; font-size: 11px;">DAWN 06:00</button>
+                  <button id="time-btn-noon" class="hud-btn active" style="padding: 4px; font-size: 11px;">NOON 12:00</button>
+                  <button id="time-btn-dusk" class="hud-btn" style="padding: 4px; font-size: 11px;">DUSK 18:00</button>
+                  <button id="time-btn-night" class="hud-btn" style="padding: 4px; font-size: 11px;">NIGHT 24:00</button>
+                </div>
+                <div style="display: flex; gap: 6px; align-items: center; margin-top: 8px;">
+                  <span style="font-size: 11px; color: #88aacc;">CLOCK SPEED:</span>
+                  <button id="time-spd-pause" class="hud-btn" style="padding: 2px 6px; font-size: 10px;">PAUSE</button>
+                  <button id="time-spd-1" class="hud-btn" style="padding: 2px 6px; font-size: 10px;">1x</button>
+                  <button id="time-spd-60" class="hud-btn active" style="padding: 2px 6px; font-size: 10px;">60x (DEFAULT)</button>
+                  <button id="time-spd-180" class="hud-btn" style="padding: 2px 6px; font-size: 10px;">180x FAST</button>
+                </div>
+                <span class="subtext">Dual-lightmap blending: Morning/Noon/Sunset/Night raytraced GI shadows with high-gloss aircraft reflections.</span>
+              </div>
+              <div class="setting-item">
+                <label>Fighter Jet Model Scale:</label>
+                <div class="slider-row">
+                  <input type="range" id="jet-scale-slider" min="0.1" max="5.0" step="0.1" value="1.0">
+                  <span id="jet-scale-val">1.0x</span>
+                </div>
+              </div>
+              <div class="setting-item">
+                <label>Missile Model Scale:</label>
+                <div class="slider-row">
+                  <input type="range" id="msl-scale-slider" min="0.1" max="5.0" step="0.1" value="1.0">
+                  <span id="msl-scale-val">1.0x</span>
+                </div>
+              </div>
+              <div class="setting-item">
+                <label>Pitch Invert:</label>
+                <input type="checkbox" id="invert-pitch-toggle">
+                <span class="subtext">Flight sim standard: Pull back (S) = Nose Up</span>
+              </div>
+              <div class="setting-item">
+                <label>Mouse Flight Steering:</label>
+                <input type="checkbox" id="mouse-flight-toggle">
+                <span class="subtext">Hold Right Mouse Button to steer with virtual joystick</span>
+              </div>
+              <div class="setting-item">
+                <label>Flight Sim Mode (Peaceful / Combat):</label>
+                <div style="display: flex; gap: 8px; margin-top: 4px;">
+                  <button id="toggle-hostiles-btn" class="hud-btn-primary" style="flex: 1; background: rgba(0, 229, 255, 0.2); border-color: #00e5ff;">DISABLE HOSTILES (PEACEFUL)</button>
+                </div>
+                <span class="subtext" id="hostiles-mode-desc">Peaceful mode disables hostile attacks for pure flight simulation.</span>
+              </div>
+              <div class="setting-item">
+                <label>Hostile Aircraft Wipe:</label>
+                <div style="display: flex; gap: 8px; margin-top: 4px;">
+                  <button id="instakill-btn" class="hud-btn-danger" style="flex: 1;">⚡ INSTAKILL ALL ENEMIES</button>
+                  <button id="clear-enemies-btn" class="hud-btn" style="flex: 1;">CLEAR AIRSPACE</button>
+                </div>
+                <span class="subtext">Instantly detonate or clear all hostiles for peaceful island cruising.</span>
+              </div>
+              <div class="setting-item">
+                <label>Spawn More Enemies:</label>
+                <button id="spawn-enemy-btn" class="hud-btn-primary">+ Spawn 2 Hostiles</button>
+              </div>
+              <div class="setting-item">
+                <label>Respawn / Reset Flight:</label>
+                <button id="reset-flight-btn" class="hud-btn-danger">Restart Flight</button>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button id="hangar-btn" class="hud-btn" style="margin-right: 12px; border-color: #00e5ff; color: #00e5ff;">CHANGE AIRCRAFT</button>
+            <button id="close-settings-btn" class="hud-btn-primary">RESUME FLIGHT</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mission Over / Respawn Overlay -->
+      <div id="game-over-modal" class="modal hidden">
+        <div class="modal-card game-over-card">
+          <h1 id="game-over-title">AIRCRAFT DESTROYED</h1>
+          <p id="game-over-desc">Your fighter suffered critical structural failure.</p>
+          <div class="stats-summary">
+            <p>Air-to-Air Victories: <b id="final-kills">0</b></p>
+            <p>Missiles Fired: <b id="final-missiles">0</b></p>
+            <p>Flight Time: <b id="final-time">0m 00s</b></p>
+          </div>
+          <div style="display: flex; gap: 12px; justify-content: center; width: 100%;">
+            <button id="respawn-btn" class="hud-btn-primary">RESPAWN</button>
+            <button id="gameover-hangar-btn" class="hud-btn">CHANGE AIRCRAFT</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
