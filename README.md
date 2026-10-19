@@ -1,11 +1,28 @@
 # AerospaceX 3D ✈️⚡
 
+[![Play on itch.io](https://img.shields.io/badge/Play_on-itch.io-FA5C5C?style=for-the-badge&logo=itchdotio&logoColor=white)](https://supboy1234.itch.io/aero3d)
 [![Three.js](https://img.shields.io/badge/Three.js-r174-black?style=for-the-badge&logo=three.js)](https://threejs.org/)
 [![Vite](https://img.shields.io/badge/Vite-8.3-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
 [![WebGL](https://img.shields.io/badge/WebGL-2.0-990000?style=for-the-badge&logo=webgl&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-An ultra-responsive, browser-based **3D Combat Flight Simulator** built from the ground up with **Three.js**, **Vite**, and **Web Audio API**. Features realistic aerodynamic physics, authentic combat cockpits, guided missile dogfighting, volumetric stargate portals, and a standalone single-file distribution that runs 100% offline.
+An ultra-responsive, browser-based **3D Combat Flight Simulator** built with **Three.js**, **Vite**, and **Web Audio API**. Features realistic aerodynamic physics, authentic combat cockpits, guided missile dogfighting, volumetric stargate portals, and a standalone single-file distribution that runs 100% offline.
+
+---
+
+## 🕹️ Quick Play Options (No Setup Required)
+
+> ### ⚠️ Important Note: `index.html` Does Not Work Standalone
+> If you clone or download this repo, **opening `index.html` directly from your file manager will NOT work**. Browsers block local asset and script loading (`CORS` policy) unless served through a local development server.
+>
+> If you don't like tweaking files, installing Node.js, or using the terminal:
+> 
+> 1. **Play directly in your browser**:  
+>    👉 **[https://supboy1234.itch.io/aero3d](https://supboy1234.itch.io/aero3d)**  
+>    *(Instant loading, zero installation)*
+>
+> 2. **Download the Offline Standalone HTML**:  
+>    👉 Go to [**GitHub Releases**](https://github.com/Suboycode1234/Aerospacex3D/releases) and download **`flight-sim-3d.html`**.  
+>    Double-click the file to play offline immediately in Chrome, Edge, Firefox, or Safari! All 3D aircraft, textures, audio synthesizers, and shaders are completely embedded inside that single file.
 
 ---
 
@@ -72,12 +89,9 @@ An ultra-responsive, browser-based **3D Combat Flight Simulator** built from the
 
 ---
 
-## 🚀 Getting Started
+## 💻 Developer Setup (For Tweaking & Modding)
 
-### Option 1: Instant Play (Standalone HTML)
-Simply download or double-click [`flight-sim-3d.html`](./flight-sim-3d.html) in your browser. No server, Node.js, or internet connection required.
-
-### Option 2: Run Locally with Vite
+If you want to modify code, add custom 3D models, or develop features locally:
 
 1. **Clone the repository**:
    ```bash
@@ -90,17 +104,17 @@ Simply download or double-click [`flight-sim-3d.html`](./flight-sim-3d.html) in 
    npm install
    ```
 
-3. **Start the local development server**:
+3. **Start local development server**:
    ```bash
    npm run dev
    ```
    Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-4. **Build the Standalone Offline HTML**:
+4. **Re-pack the Standalone Offline HTML**:
    ```bash
    node scripts/pack-standalone.js
    ```
-   This compiles all code and encodes all 3D aircraft and missile models into `flight-sim-3d.html`.
+   This compiles all modified code and base64-encodes all 3D aircraft and missile models into `flight-sim-3d.html`.
 
 ---
 
@@ -109,7 +123,7 @@ Simply download or double-click [`flight-sim-3d.html`](./flight-sim-3d.html) in 
 ```
 Aerospacex3D/
 ├── flight-sim-3d.html       # Self-contained standalone single-file distribution (~96 MB)
-├── index.html               # Main development entry point
+├── index.html               # Main development entry point (requires dev server)
 ├── style.css                # Military HUD and UI styling
 ├── package.json             # Project dependencies and scripts
 ├── vite.config.js           # Vite build and single-file bundle configuration
@@ -129,9 +143,3 @@ Aerospacex3D/
     ├── ui/                  # Collimated fighter jet HUD & instrumentation
     └── weapons/             # Rotary cannon ballistics and guided missiles
 ```
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
