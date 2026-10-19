@@ -4,6 +4,7 @@
 [![Three.js](https://img.shields.io/badge/Three.js-r174-black?style=for-the-badge&logo=three.js)](https://threejs.org/)
 [![Vite](https://img.shields.io/badge/Vite-8.3-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
 [![WebGL](https://img.shields.io/badge/WebGL-2.0-990000?style=for-the-badge&logo=webgl&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 An ultra-responsive, browser-based **3D Combat Flight Simulator** built with **Three.js**, **Vite**, and **Web Audio API**. Features realistic aerodynamic physics, authentic combat cockpits, guided missile dogfighting, volumetric stargate portals, and a standalone single-file distribution that runs 100% offline.
 
@@ -143,3 +144,10 @@ Aerospacex3D/
     ├── ui/                  # Collimated fighter jet HUD & instrumentation
     └── weapons/             # Rotary cannon ballistics and guided missiles
 ```
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
